@@ -4,7 +4,7 @@ DIR_INC = ./include
 DIR_BIN = ./bin
 DIR_LIB = ./libs
 
-TARGET	= autoanswer
+TARGET	= auto-answer
 BIN_TARGET = $(DIR_BIN)/$(TARGET)
 
 CROSS_COMPILE = 

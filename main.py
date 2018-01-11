@@ -4,8 +4,12 @@ from pynput import keyboard
 
 HOT_KEY = keyboard.Key.shift
 
+REMIX = 'sox -p -b 16 -r 16000 data/audio.wav remix -'
+RECORD = 'sox -d -p'
+RECOGNIZE = 'docker exec auto-answer recognizer /root/data/audio.wav'
+QUERY_URL = 'http://www.baidu.com/s?wd={}'
+QUERY = 'curl -L -o web/index.html'
 
-# sox -d -p | sox -p -b 16 -r 16000 recording.wav remix -
 
 def start_record():
     global g_remix
@@ -13,10 +17,10 @@ def start_record():
 
     logging.debug('recording...')
 
-    args = 'sox -p -b 16 -r 16000 data/audio.wav remix -'.split()
+    args = REMIX.split()
     g_remix = subprocess.Popen(args, stdin=subprocess.PIPE)
 
-    args = 'sox -d -p'.split()
+    args = RECORD.split()
     g_record = subprocess.Popen(args, stdout=g_remix.stdin)
 
 
@@ -28,34 +32,28 @@ def stop_record():
     g_remix.terminate()
 
 
-# tar -czf - recording.wav | ssh root@wechat.szfda.cn
-# "tar -xzf - -C ~/answer/auto-answer; cd answer/auto-answer; ./recognize.sh"
-
-
 def recognize():
-    global g_docker
-
     logging.debug('recognizing...')
 
-    args = 'docker exec auto-answer recognizer /root/data/audio.wav'.split()
-    g_docker = subprocess.Popen(args, stdout=subprocess.PIPE)
+    args = RECOGNIZE.split()
+    docker = subprocess.Popen(args, stdout=subprocess.PIPE)
 
     try:
-        outs, errs = g_docker.communicate(timeout=5)
+        outs, errs = docker.communicate(timeout=5)
 
         if errs:
             return None
         if outs:
             return outs
     except subprocess.TimeoutExpired:
-        g_docker.terminate()
+        docker.terminate()
         return None
 
 
-# curl -L -o web/index.html http://www.baidu.com/s?wd=
 def query(data):
-    url = 'http://www.baidu.com/s?wd=' + data
-    args = 'curl -L -o web/index.html'.split()
+    url = QUERY_URL.format(data)
+    # logging.debug(url)
+    args = QUERY.split()
     args.append(url[:-1])
     # logging.debug(args)
 

@@ -8,7 +8,8 @@ TARGET	= recognizer
 BIN_TARGET = $(DIR_BIN)/$(TARGET)
 
 CROSS_COMPILE =
-CFLAGS = -g -Wall -I$(DIR_INC)
+# CFLAGS = -g -Wall -I$(DIR_INC)
+CFLAGS = -O2 -I$(DIR_INC)
 
 ifdef LINUX64
 LDFLAGS := -L$(DIR_LIB)/x64

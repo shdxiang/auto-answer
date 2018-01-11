@@ -63,7 +63,7 @@ def query(data):
     url = 'http://www.baidu.com/s?wd=' + data
     args = 'curl -L -o web/index.html'.split()
     args.append(url[:-1])
-    logging.debug(args)
+    # logging.debug(args)
 
     g_curl = subprocess.Popen(args)
     g_curl.wait()

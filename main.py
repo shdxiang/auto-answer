@@ -13,7 +13,7 @@ def start_record():
 
     logging.debug('recording...')
 
-    args = 'sox -p -b 16 -r 16000 recording.wav remix -'.split()
+    args = 'sox -p -b 16 -r 16000 data/audio.wav remix -'.split()
     g_remix = subprocess.Popen(args, stdin=subprocess.PIPE)
 
     args = 'sox -d -p'.split()
@@ -33,28 +33,22 @@ def stop_record():
 
 
 def recognize():
-    global g_tar
-    global g_ssh
+    global g_docker
 
     logging.debug('recognizing...')
 
-    args = ['ssh', 'root@wechat.szfda.cn',
-            'tar -xzf - -C ~/answer/auto-answer; cd answer/auto-answer; ./recognize.sh']
-    g_ssh = subprocess.Popen(
-        args, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-
-    args = 'tar -czf - recording.wav'.split()
-    g_tar = subprocess.Popen(args, stdout=g_ssh.stdin)
+    args = 'docker exec auto-answer recognizer /root/data/audio.wav'.split()
+    g_docker = subprocess.Popen(args, stdout=subprocess.PIPE)
 
     try:
-        outs, errs = g_ssh.communicate(timeout=5)
+        outs, errs = g_docker.communicate(timeout=5)
 
         if errs:
             return None
         if outs:
             return outs
     except subprocess.TimeoutExpired:
-        g_ssh.terminate()
+        g_docker.terminate()
         return None
 
 

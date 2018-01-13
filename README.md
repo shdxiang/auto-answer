@@ -1,6 +1,6 @@
 # auto-answer
 
-自动答题的简单实现，演示：[YouTube](https://youtu.be/vdNGpVV65CM) 或 [腾讯视频](https://youtu.be/vdNGpVV65CM)。
+自动答题的简单实现，演示：[YouTube](https://youtu.be/vdNGpVV65CM) 或 [腾讯视频](https://v.qq.com/x/page/m053255roba.html)。
 
 ## 使用方法
 
